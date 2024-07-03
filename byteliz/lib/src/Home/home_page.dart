@@ -12,10 +12,10 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       color: Colors.red,
-      home: Container(
+      home: SizedBox(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
-        child: Text('Login com Sucesso'),
+        child: const Text('Login com Sucesso'),
       ),
     );
   }

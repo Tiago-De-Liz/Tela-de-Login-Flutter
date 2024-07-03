@@ -1,3 +1,4 @@
+import 'package:byteliz/src/utils/login_utils.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -16,7 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      backgroundColor: Color.fromARGB(255, 250, 250, 250),
+      backgroundColor: const Color.fromARGB(255, 250, 250, 250),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -24,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
               alignment: Alignment.topCenter,
               width: MediaQuery.of(context).size.width,
               height: 200,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   color: Color.fromARGB(255, 209, 40, 34),
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(50),
@@ -38,7 +39,7 @@ class _LoginPageState extends State<LoginPage> {
                     'assets/icons/LogoByteLiz.png',
                     scale: 4,
                   ),
-                  Text(
+                  const Text(
                     'Login',
                     style: TextStyle(
                       fontSize: 25,
@@ -46,11 +47,11 @@ class _LoginPageState extends State<LoginPage> {
                       color: Colors.white,
                     ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                 ],
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Padding(
@@ -63,9 +64,9 @@ class _LoginPageState extends State<LoginPage> {
                       children: [
                         TextFormField(
                           controller: _emailController,
-                          cursorColor: Color.fromARGB(255, 209, 40, 34),
+                          cursorColor: const Color.fromARGB(255, 209, 40, 34),
                           keyboardType: TextInputType.emailAddress,
-                          decoration: InputDecorationLogin('E-mail'),
+                          decoration: inputDecorationLogin('E-mail'),
                           validator: (value) {
                             if (value!.isEmpty) {
                               return 'Por favor, informe o e-mail.';
@@ -73,42 +74,42 @@ class _LoginPageState extends State<LoginPage> {
                             return null;
                           },
                         ),
-                        SizedBox(height: 10),
-                        PasswordField(controller: _passwordController,),
+                        const SizedBox(height: 10),
+                        PasswordField(controller: _passwordController, titleField: 'Senha',),
                       ],
                     ),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Container(
                     child: Row(
                       children: [
                         Checkbox(
-                          side: BorderSide(
+                          side: const BorderSide(
                               color: Color.fromARGB(255, 209, 40, 34),
                               width: 1),
                           value: _manterConectado,
-                          activeColor: Color.fromARGB(255, 209, 40, 34),
-                          overlayColor: MaterialStateProperty.all<Color>(
-                              Color.fromARGB(255, 255, 134, 130)),
+                          activeColor: const Color.fromARGB(255, 209, 40, 34),
+                          overlayColor: WidgetStateProperty.all<Color>(
+                              const Color.fromARGB(255, 255, 134, 130)),
                           onChanged: (value) {
                             setState(() {
                               _manterConectado = value!;
                             });
                           },
                         ),
-                        Text(
+                        const Text(
                           'Manter conectado?',
                           style: TextStyle(
                             color: Color.fromARGB(255, 209, 40, 34),
                             fontSize: 14,
                           ),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         GestureDetector(
                           onTap: () {
-                            
+                            Navigator.of(context).pushNamed('/forgotpassword');
                           },
-                          child: Text(
+                          child: const Text(
                             'Esqueceu a Senha?',
                             style: TextStyle(
                               fontSize: 13,
@@ -126,112 +127,110 @@ class _LoginPageState extends State<LoginPage> {
                     onPressed: () {
                       //_login();
                     },
-                    child: Container(
+                    style: ButtonStyle(
+                        backgroundColor: WidgetStateProperty.all<Color>(
+                            const Color.fromARGB(255, 209, 40, 34)),
+                        foregroundColor:
+                            WidgetStateProperty.all<Color>(Colors.white)),
+                    child: const SizedBox(
                       width: double.infinity,
                       child: Text(
                         'Entrar',
                         textAlign: TextAlign.center,
                       ),
                     ),
-                    style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            Color.fromARGB(255, 209, 40, 34)),
-                        foregroundColor:
-                            MaterialStateProperty.all<Color>(Colors.white)),
                   ),
-                  SizedBox(height: 10),
-                  Text(
+                  const SizedBox(height: 10),
+                  const Text(
                     'Conectar-se com',
                     style: TextStyle(
                       color: Color.fromARGB(255, 209, 40, 34),
                       fontSize: 15,
                     ),
                   ),
-                  SizedBox(height: 10),
-                  Container(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            child: Container(
-                              width: double.infinity,
-                              child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image.asset(
-                                      'assets/icons/google.png',
-                                      scale: 10,
-                                    ),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      'Google',
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ]),
-                            ),
-                            style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Colors.white),
-                                foregroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Colors.black)),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 30,
-                        ),
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            child: Container(
-                              width: double.infinity,
-                              child: Row(
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  WidgetStateProperty.all<Color>(
+                                      Colors.white),
+                              foregroundColor:
+                                  WidgetStateProperty.all<Color>(
+                                      Colors.black)),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Image.asset(
-                                    'assets/icons/facebook.png',
+                                    'assets/icons/google.png',
                                     scale: 10,
                                   ),
-                                  SizedBox(width: 8),
-                                  Text(
-                                    'Facebook',
+                                  const SizedBox(width: 8),
+                                  const Text(
+                                    'Google',
                                     textAlign: TextAlign.center,
                                   ),
-                                ],
-                              ),
-                            ),
-                            style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Color.fromARGB(255, 71, 99, 160)),
-                                foregroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Color.fromARGB(255, 255, 255, 255))),
+                                ]),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(
+                        width: 30,
+                      ),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  WidgetStateProperty.all<Color>(
+                                      const Color.fromARGB(255, 71, 99, 160)),
+                              foregroundColor:
+                                  WidgetStateProperty.all<Color>(
+                                      const Color.fromARGB(255, 255, 255, 255))),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  'assets/icons/facebook.png',
+                                  scale: 10,
+                                ),
+                                const SizedBox(width: 8),
+                                const Text(
+                                  'Facebook',
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Container(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('Não tem uma conta?',
+                        const Text('Não tem uma conta?',
                             style: TextStyle(
                               color: Color.fromARGB(255, 209, 40, 34),
                               fontSize: 15,
                             )),
-                        SizedBox(width: 5,),
+                        const SizedBox(width: 5,),
                         GestureDetector(
                           onTap: () {
                             Navigator.of(context).pushNamed('/register');
                           },
-                          child: Text('Cadastrar Agora!',
+                          child: const Text('Cadastrar Agora!',
                             style: TextStyle(
                               color: Color.fromARGB(255, 0, 140, 255),
                               fontSize: 15,
@@ -250,76 +249,6 @@ class _LoginPageState extends State<LoginPage> {
           ],
         ),
       ),
-    );
-  }
-}
-
-InputDecoration InputDecorationLogin(String labeltext, {Widget? suffixIcon}) {
-  return InputDecoration(
-    labelText: labeltext,
-    suffixIcon: suffixIcon,
-    labelStyle: TextStyle(
-      color: Color.fromARGB(255, 209, 40, 34),
-    ),
-    border: OutlineInputBorder(),
-    focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(
-        color: Color.fromARGB(255, 209, 40, 34),
-      ),
-    ),
-    enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(
-        color: Color.fromARGB(255, 209, 40, 34),
-      ),
-    ),
-    disabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(
-        color: Color.fromARGB(255, 209, 40, 34),
-      ),
-    ),
-  );
-}
-
-class PasswordField extends StatefulWidget {
-  final TextEditingController controller;
-
-  const PasswordField({Key? key, required this.controller}) : super(key: key);
-
-  @override
-  State<PasswordField> createState() => _PasswordFieldState();
-}
-
-class _PasswordFieldState extends State<PasswordField> {
-  String password = '';
-  bool _obscureText = true; 
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      onChanged: (text) {
-        password = text;
-      },
-      obscureText: _obscureText,
-      controller: widget.controller,
-      decoration: InputDecorationLogin(
-        'Senha',
-        suffixIcon: IconButton(
-          icon: Icon(
-            _obscureText ? Icons.visibility_off : Icons.visibility,
-          ),
-          onPressed: () {
-            setState(() {
-              _obscureText = !_obscureText;
-            });
-          },
-        ),
-      ),
-      validator: (value) {
-        if (value!.isEmpty) {
-          return 'Por favor, informe a senha.';
-        }
-        return null;
-      },
     );
   }
 }
