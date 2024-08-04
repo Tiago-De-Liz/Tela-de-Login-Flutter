@@ -1,5 +1,10 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:byteliz/src/utils/dialog_utils.dart';
 import 'package:byteliz/src/utils/login_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -12,6 +17,45 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _manterConectado = true;
+
+  Future<void> _login() async {
+    final email = _emailController.text;
+    final password = _passwordController.text;
+
+    if (email != '') {
+      if (!(email.contains('@')) || !(email.contains('.com'))) {
+        showErrorDialog(context, "E-mail informado não é válido");
+        return;
+      }
+    } else {
+      showErrorDialog(context, "E-mail não informado");
+      return;
+    }
+
+    if (password == '') {
+      showErrorDialog(context, "Senha não informada");
+      return;
+    }
+    
+    try {
+      final response = await http.get(
+        Uri.http('10.0.2.2:9999','/byteliz/login', {'email': email, 'password': password}),
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      );
+
+      if (response.statusCode >= 200 && response.statusCode <= 300) {
+        final data = jsonDecode(response.body);
+
+        Navigator.of(context).pushReplacementNamed('/home', arguments: data['data']);
+      } else {
+        showErrorDialog(context, response.body);
+      }
+    } catch (e) {
+      showErrorDialog(context, "Problema de conexão com o servidor!");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +151,7 @@ class _LoginPageState extends State<LoginPage> {
                         const Spacer(),
                         GestureDetector(
                           onTap: () {
-                            Navigator.of(context).pushNamed('/forgotpassword');
+                            Navigator.of(context).pushNamed('/forgotpassword/email', arguments: "email");
                           },
                           child: const Text(
                             'Esqueceu a Senha?',
@@ -125,7 +169,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      //_login();
+                      _login();
                     },
                     style: ButtonStyle(
                         backgroundColor: WidgetStateProperty.all<Color>(

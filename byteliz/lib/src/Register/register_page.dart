@@ -1,11 +1,89 @@
+import 'dart:convert';
+
+import 'package:byteliz/src/utils/dialog_utils.dart';
 import 'package:byteliz/src/utils/login_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
-class RegisterPage extends StatelessWidget {
+class RegisterPage extends StatefulWidget {
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _passwordConfirmeController = TextEditingController();
+
+  Future<void> _register() async {
+    final nome = _nameController.text;
+    final email = _emailController.text;
+    final password = _passwordController.text;
+    final confirmePassword = _passwordConfirmeController.text;
+
+    if (nome == '') {
+      showErrorDialog(context, "Nome não informado");
+      return;
+    }  
+
+    if (email != '') {
+      if (!(email.contains('@')) || !(email.contains('.com'))) {
+        showErrorDialog(context, "E-mail informado não é válido");
+        return;
+      }
+    } else {
+      showErrorDialog(context, "E-mail não informado");
+      return;
+    }
+
+    if (password != '' && confirmePassword != '') {
+      final passwordRegExp = RegExp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$');
+      if (!passwordRegExp.hasMatch(password)) {
+        showErrorDialog(context, "A senha deve ter pelo menos 8 caracteres, incluindo uma letra e um número.");
+        return;
+      }
+
+      if (password != confirmePassword) {
+        showErrorDialog(context, "As senhas não correspondem");
+        return;
+      }
+    } else {
+      if (password == '') {
+        showErrorDialog(context, "Senha não informada");
+        return;
+      }
+
+      if (confirmePassword == '') {
+        showErrorDialog(context, "Confirmar senha não informado");
+        return;
+      }
+    }
+    
+    try {
+      final response = await http.put(
+        Uri.http('10.0.2.2:9999','/byteliz/register'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'nome': nome,
+          'email': email,
+          'password': password
+        })
+      );
+
+      if (response.statusCode >= 200 && response.statusCode <= 300) {
+        final data = jsonDecode(response.body);
+
+        Navigator.of(context).pushReplacementNamed('/home', arguments: data['data']);
+      } else {
+        showErrorDialog(context, response.body);
+      }
+    } catch (e) {
+      showErrorDialog(context, "Problema de conexão com o servidor!");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +169,7 @@ class RegisterPage extends StatelessWidget {
                   const SizedBox(height: 15),
                   ElevatedButton(
                     onPressed: () {
-                      //_cadastrar();
+                      _register();
                     },
                     style: ButtonStyle(
                         backgroundColor: WidgetStateProperty.all<Color>(

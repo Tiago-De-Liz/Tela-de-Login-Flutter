@@ -1,15 +1,55 @@
+import 'dart:convert';
+
+import 'package:byteliz/src/utils/dialog_utils.dart';
 import 'package:byteliz/src/utils/login_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
-class ForgotPasswordPage extends StatefulWidget {
-  const ForgotPasswordPage({super.key});
+class ForgotPasswordEmailPage extends StatefulWidget {
+  const ForgotPasswordEmailPage({super.key});
 
   @override
-  State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
+  State<ForgotPasswordEmailPage> createState() => _ForgotPasswordEmailPageState();
 }
 
-class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
+class _ForgotPasswordEmailPageState extends State<ForgotPasswordEmailPage> {
   final TextEditingController _emailController = TextEditingController();
+
+  Future<void> _forgotPasswordEmail() async {
+    final email = _emailController.text;
+
+    if (email != '') {
+      if (!(email.contains('@')) || !(email.contains('.com'))) {
+        showErrorDialog(context, "E-mail informado não é válido");
+        return;
+      }
+    } else {
+      showErrorDialog(context, "E-mail não informado");
+      return;
+    }
+    
+    try {
+      final response = await http.post(
+        Uri.http('10.0.2.2:9999','/byteliz/forgotpassword/email'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'email': email,
+        })
+      );
+
+      if (response.statusCode >= 200 && response.statusCode <= 300) {
+        final data = jsonDecode(response.body);
+
+        Navigator.of(context).pushReplacementNamed('/forgotpassword/code', arguments: email);
+      } else {
+        showErrorDialog(context, response.body);
+      }
+    } catch (e) {
+      showErrorDialog(context, "Problema de conexão com o servidor!");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,12 +94,19 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             ),
             Padding(
               padding: const EdgeInsets.only(
-                  left: 12.0, right: 12.0, bottom: 12.0, top: 50.0),
+                  left: 12.0, right: 12.0, bottom: 12.0, top: 20.0),
               child: Column(
                 children: [
                   Container(
                     child: Column(
                       children: [
+                        Text("Informe seu e-mail para envio do código de verificação.",
+                          style: TextStyle(
+                              color: const Color.fromARGB(255, 209, 40, 34),
+                              fontSize: 15,
+                            ),
+                        ),
+                        SizedBox(height: 15,),
                         TextFormField(
                           controller: _emailController,
                           cursorColor: const Color.fromARGB(255, 209, 40, 34),
@@ -78,7 +125,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   SizedBox(height: 20,),
                   ElevatedButton(
                     onPressed: () {
-                      //_login();
+                      _forgotPasswordEmail();
                     },
                     style: ButtonStyle(
                         backgroundColor: WidgetStateProperty.all<Color>(
