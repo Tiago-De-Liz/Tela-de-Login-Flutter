@@ -4,6 +4,7 @@ import 'package:byteliz/src/ForgotPassword/forgotpasswordnewpassword_page.dart';
 import 'package:byteliz/src/Home/home_page.dart';
 import 'package:byteliz/src/Login/login_page.dart';
 import 'package:byteliz/src/Register/register_page.dart';
+import 'package:byteliz/src/loadingscreen_page.dart';
 import 'package:flutter/material.dart';
 
 class AppWidget extends StatelessWidget {
@@ -12,8 +13,9 @@ class AppWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/login',
+      initialRoute: '/',
       routes: {
+        '/': (context) => LoadingScreenPage(),
         '/login': (context) => LoginPage(),
         '/register': (context) => RegisterPage(), 
         '/forgotpassword/email': (context) => ForgotPasswordEmailPage(),
