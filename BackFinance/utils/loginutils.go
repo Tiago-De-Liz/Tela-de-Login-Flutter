@@ -13,8 +13,8 @@ import (
 )
 
 const (
-	EmailByteLiz = "tiagopdeliz@gmail.com"
-	SenhaByteLiz = "Tiago213#"
+	EmailByteLiz = "teste@gmail.com"
+	SenhaByteLiz = "teste#"
 )
 
 func HashPassword(password string) (string, error) {
